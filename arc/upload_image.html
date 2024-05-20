@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Upload Image</title>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Upload Image</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        {% csrf_token %}
+       <label for="description">Description:</label>
+       <input type="text" id="description" name="description">
+        
+
+       <label for="image">Image:</label>
+       <input type="file" id="image" name="image" accept="image/*">
+        
+
+       <button type="submit">Upload</button>
+    </form>
+    
+
+    <img id="result-image" src="" alt="Result Image" style="display:none;">
+
+   <script>
+        $("#upload-form").submit(function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '/upload_image/',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    $("#result-image").attr("src", "data:image/jpeg;base64," + data.image);
+                    $("#result-image").show();
+                },
+                error: function() {
+                    alert("Error occurred while uploading the image.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
